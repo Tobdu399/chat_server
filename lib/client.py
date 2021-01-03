@@ -2,7 +2,7 @@ import socket
 import colorama
 from datetime import datetime
 import threading
-import misc
+from . import misc
 
 colorama.init()
 

@@ -1,6 +1,6 @@
 import socket
 import threading
-import misc
+from . import misc
 
 clients = {}
 

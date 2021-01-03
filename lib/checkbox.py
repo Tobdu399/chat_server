@@ -1,5 +1,5 @@
 import tkinter
-from misc import background_color
+from .misc import background_color
 
 checkboxes = []
 

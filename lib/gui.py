@@ -1,13 +1,14 @@
 import tkinter
 import tkinter.font as font
 from tkinter import messagebox
-import entry
-import button
-import misc
-import client
-import scrollableframe as sframe
-import checkbox
-import server
+
+from . import entry
+from . import button
+from . import misc
+from . import client
+from . import scrollableframe as sframe
+from . import checkbox
+from . import server
 
 padding = 10
 display = tkinter.Tk()
@@ -26,12 +27,12 @@ button.buttons["connect"] = button.Button(display, padding, padding + 85,
                                           lambda: client.connect(entry.entries["username"], entry.entries["port"], entry.entries["ip"]),
                                           "#09e378", normalFont)
 
-button.buttons["host"] = button.Button(display, padding + 200-70, padding + 85,
+button.buttons["host"] = button.Button(display, padding + 200 - 70, padding + 85,
                                        70, 30, "Host",
                                        lambda: server.host(entry.entries["port"]),
                                        "#09e378", normalFont)
 
-button.buttons["send"] = button.Button(display, 500-padding*2-49, 185,
+button.buttons["send"] = button.Button(display, 500 - padding * 2 - 49, 185,
                                        60, 21, "Send",
                                        lambda: client.send_msg(entry.entries["message"]),
                                        "#09e378", smallFont)
@@ -40,7 +41,7 @@ button.buttons["send"] = button.Button(display, 500-padding*2-49, 185,
 entry.entries["username"] = entry.InputField(display, padding, padding, 200, 20, "Username")
 entry.entries["port"] = entry.InputField(display, padding, padding + 25, 200, 20, "Port (i.e. 1024)")
 entry.entries["ip"] = entry.InputField(display, padding, padding + 50, 200, 20, "IP (i.e. 192.168.0.0")
-entry.entries["message"] = entry.InputField(display, padding, 185, 500-padding*2-65, 20, "Your message...")
+entry.entries["message"] = entry.InputField(display, padding, 185, 500 - padding * 2 - 65, 20, "Your message...")
 
 # Scrollable entries
 log_messages = sframe.ScrollableFrame(display)
@@ -95,7 +96,3 @@ def main():
 
     display.protocol("WM_DELETE_WINDOW", on_closing)
     display.mainloop()
-
-
-if __name__ == '__main__':
-    main()
