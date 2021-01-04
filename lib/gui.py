@@ -15,7 +15,7 @@ display = tkinter.Tk()
 
 display.geometry("500x400")
 display.resizable(False, False)
-display.title("Server")
+display.title("Python Chat Server")
 display.config(bg=misc.background_color)
 
 smallFont = font.Font(family="Helvetica", size=8)
@@ -68,14 +68,12 @@ def update_log():
 def on_closing():
     if misc.hosting:
         if messagebox.askyesno("You are the Host", "You are Hosting a server! Are you sure you want to quit?"):
-            client.disconnect()
-            display.destroy()
+            client.disconnect(display)
     elif misc.connected:
         if messagebox.askyesno("You are connected", "You are connected to a server! Are you sure you want to quit?"):
-            client.disconnect()
-            display.destroy()
+            client.disconnect(display)
     else:
-        display.destroy()
+        client.disconnect(display)
 
 
 def main():
@@ -96,3 +94,7 @@ def main():
 
     display.protocol("WM_DELETE_WINDOW", on_closing)
     display.mainloop()
+
+
+if __name__ == "__main__":
+    exit()

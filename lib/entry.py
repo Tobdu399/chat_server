@@ -36,3 +36,7 @@ class InputField(tkinter.Entry):
     def focus_out(self, *args):
         if not self.get():
             self.put_placeholder()
+
+
+if __name__ == "__main__":
+    exit()

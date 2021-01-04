@@ -2,6 +2,7 @@ import socket
 import colorama
 from datetime import datetime
 import threading
+import traceback
 from . import misc
 
 colorama.init()
@@ -39,6 +40,9 @@ def connect(username, port, ip):
                         misc.log_messages.append("[INFO] Invalid IP")
 
                 except ValueError:
+                    error = traceback.format_exc()
+                    misc.errors.append(error)
+
                     misc.log_messages.append("[INFO] Invalid port")
             else:
                 misc.log_messages.append("[INFO] Invalid port")
@@ -48,13 +52,22 @@ def connect(username, port, ip):
         misc.log_messages.append("[INFO] You are already connected to a server")
 
 
-def disconnect():
-    s.send(f"@{USERNAME} left".encode())
-    misc.hosting = False
-    misc.connected = False
+def disconnect(root):
+    try:
+        s.send(f"@{USERNAME} left".encode())
+        s.close()
+    except OSError:
+        error = traceback.format_exc()
+        misc.errors.append(error)
+
+        misc.log_messages.append("[ERROR] An unexpected error occurred!")
+    finally:
+        misc.hosting = False
+        misc.connected = False
+        root.destroy()
 
 
-def send_msg(entry):    # Give the entry where the message will be grabbed from
+def send_msg(entry):  # Give the entry where the message will be grabbed from
     time = datetime.now()
     current_time = time.strftime("%H:%M:%S")
 
@@ -62,10 +75,13 @@ def send_msg(entry):    # Give the entry where the message will be grabbed from
 
     try:
         if message_input != "" and message_input != entry.placeholder:
-            entry.delete('0', "end")    # Clear the entry box after sending the message
+            entry.delete('0', "end")  # Clear the entry box after sending the message
             message = f"[{current_time}] @{USERNAME}: {message_input}"
             s.sendall(message.encode())
     except OSError:
+        error = traceback.format_exc()
+        misc.errors.append(error)
+
         misc.log_messages.append("[INFO] You must be connected to a server to send messages\n")
 
 
@@ -74,9 +90,13 @@ def receive_msg():
         try:
             from_server = str(s.recv(1024))[2:-1]
             misc.log_messages.append(from_server)
-        except ConnectionResetError:
-            misc.log_messages.append("\n[CONNECTION ERROR] Connection was forcibly closed by the remote host\n")
+        except(ConnectionResetError, ConnectionAbortedError):
+            error = traceback.format_exc()
+            misc.errors.append(error)
+
+            misc.log_messages.append("\n[CONNECTION ERROR] Connection to the server lost!\n")
             misc.connected = False
+            misc.hosting = False
 
 
 def main():
@@ -88,18 +108,31 @@ def main():
             s.connect((IP, PORT))
             misc.log_messages.append(f"[SERVER] Connection established\n")
             misc.connected = True
+            receive_msg_thread.start()
 
             try:
                 s.send(f"@{USERNAME} joined!".encode())
             except OSError:
+                error = traceback.format_exc()
+                misc.errors.append(error)
+
                 misc.log_messages.append("[ERROR] A Connection error occurred possibly due to an invalid IP")
                 misc.connected = False
+
         except socket.gaierror:
+            error = traceback.format_exc()
+            misc.errors.append(error)
+
             misc.log_messages.append("[CONNECTION ERROR] Invalid IP")
             misc.connected = False
 
-        receive_msg_thread.start()
-
     except ConnectionRefusedError:
+        error = traceback.format_exc()
+        misc.errors.append(error)
+
         misc.log_messages.append(f"[CONNECTION ERROR] Connection to port {PORT} failed!\n")
         misc.connected = False
+
+
+if __name__ == "__main__":
+    exit()

@@ -5,7 +5,7 @@ from . import misc
 clients = {}
 
 
-def listener(client, address):
+def listener(client):
     try:
         while True:
             try:
@@ -29,16 +29,19 @@ def host(port):
     PORT = port.get()
 
     if not misc.hosting:
-        if PORT != port.placeholder and PORT != "":
-            try:
-                PORT = int(PORT)
-                server_thread = threading.Thread(target=start_server, args=(PORT,))
-                server_thread.daemon = True
-                server_thread.start()
-            except ValueError:
+        if not misc.connected:
+            if PORT != port.placeholder and PORT != "":
+                try:
+                    PORT = int(PORT)
+                    server_thread = threading.Thread(target=start_server, args=(PORT,))
+                    server_thread.daemon = True
+                    server_thread.start()
+                except ValueError:
+                    misc.log_messages.append("[SERVER] Invalid port")
+            else:
                 misc.log_messages.append("[SERVER] Invalid port")
         else:
-            misc.log_messages.append("[SERVER] Invalid port")
+            misc.log_messages.append("[SERVER] Can't start hosting! You are already connected to a server")
     else:
         misc.log_messages.append("[SERVER] You are already hosting a server!")
 
@@ -60,4 +63,8 @@ def start_server(port):
 
     while True:
         conn, addr = s.accept()
-        clients[conn] = threading.Thread(target=listener, args=(conn, addr)).start()
+        clients[conn] = threading.Thread(target=listener, args=(conn,)).start()
+
+
+if __name__ == "__main__":
+    exit()

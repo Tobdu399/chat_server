@@ -15,3 +15,7 @@ class Checkbox(tkinter.Checkbutton):
 
     def show(self):
         self.place(x=self.x, y=self.y)
+
+
+if __name__ == "__main__":
+    exit()

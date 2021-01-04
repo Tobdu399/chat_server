@@ -27,3 +27,7 @@ class ScrollableFrame(ttk.Frame):
 
     def mousewheel(self, event):
         self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+
+if __name__ == "__main__":
+    exit()
