@@ -1,4 +1,5 @@
 lib/__pycache__/
 .idea/
-logs/
-lib/*.py
+
+*.py
+!chat_server.pyw
