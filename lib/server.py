@@ -1,5 +1,5 @@
 from lib import misc
-from lib.misc import display
+from lib.misc import traceback
 
 clients = {}
 
@@ -12,12 +12,22 @@ def listener(client):
                 if not data:
                     break
 
-                for c in clients.keys():
-                    if c != client:
-                        c.sendall(data)
+                try:
+                    for c in clients.keys():
+                        if c != client:
+                            c.sendall(data)
+                except OSError:
+                    error = traceback.format_exc()
+                    misc.errors.append(error)
+
+                    clients.pop(client)
+                    break
 
                 client.send(data)
             except ConnectionResetError:
+                error = traceback.format_exc()
+                misc.errors.append(error)
+
                 clients.pop(client)
                 break
     finally:
@@ -37,6 +47,9 @@ def host(port):
                     server_thread.daemon = True
                     server_thread.start()
                 except ValueError:
+                    error = traceback.format_exc()
+                    misc.errors.append(error)
+
                     misc.log_messages.append("[SERVER] Invalid port")
             else:
                 misc.log_messages.append("[SERVER] Invalid port")
