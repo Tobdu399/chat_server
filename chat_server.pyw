@@ -1,3 +1,4 @@
+import sourcedefender
 from lib.gui import main
 from lib.misc import log_errors
 
