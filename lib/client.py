@@ -1,16 +1,5 @@
-import socket
-import colorama
-from datetime import datetime
-import threading
-import traceback
-from . import misc
-
-colorama.init()
-
-red_bg = "\033[41m"
-green = "\033[32m"
-blue = "\033[35m"
-clear = "\033[0m"
+from lib import misc
+from lib.misc import threading, traceback, datetime, socket, display
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -29,12 +18,12 @@ def connect(username, port, ip):
     IP = ip.get()
 
     if not misc.connected:
-        if USERNAME != username.placeholder and USERNAME != "":
-            if PORT != port.placeholder and PORT != "":
+        if USERNAME != username.placeholder and " " not in USERNAME and USERNAME != "":
+            if PORT != port.placeholder and " " not in PORT and PORT != "":
                 try:
                     PORT = int(PORT)
 
-                    if IP != ip.placeholder and IP != "":
+                    if IP != ip.placeholder and " " not in IP and IP != "":
                         main()
                     else:
                         misc.log_messages.append("[INFO] Invalid IP")
@@ -52,7 +41,7 @@ def connect(username, port, ip):
         misc.log_messages.append("[INFO] You are already connected to a server")
 
 
-def disconnect(root):
+def disconnect():
     try:
         s.send(f"@{USERNAME} left".encode())
         s.close()
@@ -64,7 +53,7 @@ def disconnect(root):
     finally:
         misc.hosting = False
         misc.connected = False
-        root.destroy()
+        display.destroy()
 
 
 def send_msg(entry):  # Give the entry where the message will be grabbed from
@@ -90,7 +79,7 @@ def receive_msg():
         try:
             from_server = str(s.recv(1024))[2:-1]
             misc.log_messages.append(from_server)
-        except(ConnectionResetError, ConnectionAbortedError):
+        except(ConnectionResetError, ConnectionAbortedError, OSError):
             error = traceback.format_exc()
             misc.errors.append(error)
 

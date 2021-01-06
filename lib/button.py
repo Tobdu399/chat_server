@@ -1,11 +1,13 @@
-import tkinter
+from lib.misc import tkinter, button_color
 
 buttons = {}
 
 
 class Button(tkinter.Button):
-    def __init__(self, root, x, y, width, height, text, command, color, font):
-        super().__init__(text=text, command=command, bg=color, activebackground=color, font=font, relief="groove", borderwidth=2)
+    def __init__(self, root, x, y, width, height, text, command, font):
+        super().__init__(text=text, command=command, bg=button_color, activebackground=button_color,
+                         font=font, relief="flat", overrelief="groove")
+
         self.root = root
         self.x = x
         self.y = y

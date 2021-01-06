@@ -1,6 +1,5 @@
-import socket
-import threading
-from . import misc
+from lib import misc
+from lib.misc import display
 
 clients = {}
 
@@ -33,7 +32,8 @@ def host(port):
             if PORT != port.placeholder and PORT != "":
                 try:
                     PORT = int(PORT)
-                    server_thread = threading.Thread(target=start_server, args=(PORT,))
+
+                    server_thread = misc.threading.Thread(target=start_server, args=(PORT,))
                     server_thread.daemon = True
                     server_thread.start()
                 except ValueError:
@@ -51,10 +51,10 @@ def start_server(port):
     PORT = port
 
     # listen for new TCP connections
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s = misc.socket.socket(misc.socket.AF_INET, misc.socket.SOCK_STREAM)
+    s.setsockopt(misc.socket.SOL_SOCKET, misc.socket.SO_REUSEADDR, 1)
     s.bind((HOST, PORT))
-    misc.log_messages.append(f"[SERVER] Server listening at port {PORT}...")
+    misc.log_messages.append(f"[SERVER] Server listening at port {PORT}")
     misc.update_ip()
     misc.log_messages.append(f"[SERVER] Host IP address: {misc.ip}")
     misc.hosting = True
@@ -63,7 +63,7 @@ def start_server(port):
 
     while True:
         conn, addr = s.accept()
-        clients[conn] = threading.Thread(target=listener, args=(conn,)).start()
+        clients[conn] = misc.threading.Thread(target=listener, args=(conn,)).start()
 
 
 if __name__ == "__main__":

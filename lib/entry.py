@@ -1,11 +1,11 @@
-import tkinter
+from lib.misc import tkinter, smallFont, foreground_color
 
 entries = {}
 
 
 class InputField(tkinter.Entry):
     def __init__(self, root, x, y, width, height, placeholder):
-        super().__init__()
+        super().__init__(font=smallFont, borderwidth=5, relief="flat", bg=foreground_color)
 
         self.root = root
         self.x = x
