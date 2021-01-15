@@ -14,5 +14,5 @@ Simple encrypted Python server with GUI for communicating on local network
 **Other requirements:**
 - Internet connection
 
-**Known issues:**
-- _Client's message logging is not working
+# Issues
+- Client's message logging is not working
